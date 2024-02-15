@@ -1,0 +1,32 @@
+Pasos para enlazar y clonar repositorios de github
+---------------------------------------------------
+
+1- Instalar git con sudo apt install git
+
+2- Establecer el nombre de usuario al mismo que github con git config --global user.name "<nombre_usuario>"
+
+3- Establecer el correo al mismo que la cuenta de github con git config --global user.email "<correo_usuario>"
+
+4- Crear una clave privada con ssh-keygen -t ed25519 -C "<correo_usuario>"
+
+5- Creamos un directorio oculto con mkdir .ssh
+
+6- Movemos los  con las claves pública y  privada al directorio que hemos creado con mv id_ed25519 .ssh/ y mv id_ed25519.pub .ssh/
+
+7- Visualizamos el contenido de la clave pública con cat ~/.ssh/id_ed25519.pub y copiamos la línea entera
+
+8- Ahora accedemos a github por navegador web, iniciamos sesión y en settings -> SSH and GPG keys -> New SSH key
+
+9- En title de la nueva llave ssh ponemos un nombre que queramos y en descripción pegamos la clave pública que copiamos anteriormente
+
+10- Le damos a Add SSH key y si nos la pide introducimos la contraseña de nuestro github
+
+11- Ahora podemos probar que funcione la conexión con ssh -T git@github.com
+
+(si funciona mostrará un mensaje como este -> Hi Libee01! You've successfully authenticated, but GitHub does not provide shell access.)
+
+(en caso de no funcionar podemos usar el siguiente comando para asegurarnos de que tengamos creada una clave ssh: ssh-add -l -E sha256)
+
+12- Ahora vamos a clonar el repositorio en local con git clone git@github.com:Libee01/Script-SAMBA.git
+
+13- Si todo ha salido bien se nos ha debido crear un directorio con ese nombre "Script-SAMBA" y si entramos deberemos ver los archivos
