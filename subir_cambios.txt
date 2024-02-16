@@ -1,0 +1,25 @@
+Pasos para subir los cambios realizados en el repositorio desde terminal
+-------------------------------------------------------------------------
+
+1- Podemos ejecutar git status para ver que archivos han sido modificados, borrados o creados
+
+2- Ahora agregaremos los archivos al área de preparación, para agregar todos los cambios ejecutamos git add .
+
+(si sólo queremos subir un archivo concreto podemos utilizar git add "<nombre_archivo>"
+
+3- Ahora prepararemos los cambios con git commit -m "<comentario_cambios_realizados>"
+
+4- Subimos los cambios a github con git push -u origin main (sólo es necesario la primera vez, luego bastará con git push)
+
+
+
+WARNING!!: Si al intentar subir los cambios nos devuelve un error parecido a este:
+
+ayuda: Actualizaciones fueron rechazadas porque el remoto contiene trabajo que no existe localmente...
+
+Este error significa que hay cambios subidos a github que no tenemos en nuestro directorio local, para solucionar este error tendremos que primero descargarnos los cambios
+
+con git pull origin main con esto actualizaremos los cambios a nuestro directorio local
+
+Ahora ejecutaremos git merge para fusionar los cambios nuestros con los nuevos descargados de github y volvemos a ejecutar git push para subirlos a github
+
