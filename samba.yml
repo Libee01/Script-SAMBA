@@ -1,16 +1,34 @@
 ---
 - name: Instalar samba
-  hosts: all
+  hosts: clientes # El nombre debe estar especificado en el archivo de hosts
   tasks:
-   - name: Descargar samba
-     apt:
-       name: samba
-       update_cache: yes # Para actualizar las librerías antes de descargar samba (ejecutar apt-get update)
-       state: latest # Para instalar la última versión
-     become: yes # Para otorgar permisos de superusuario
-
-   - name: Reiniciar samba
-     service:
-       name: smbd # Nombre del servicio de samba
-       state: restarted # Estado del servicio (reiniciado)
-     become: yes
+    - name: Descargar samba
+      apt:
+        name: samba
+        update_cache: yes # Para actualizar las librerías antes de descargar samba (ejecutar apt-get update)
+        state: latest # Para instalar la última versión
+      become: yes # Para otorgar permisos de superusuario
+    - name: Crear un directorio
+      file:
+        path: /home/mario/samba_compartida # Ruta del directorio a compartir
+        state: directory # Especificamos el tipo de archivo (directorio)
+        mode: '0775' # Permisos del directorio
+        owner: mario # Definimos el propietario del directorio
+        group: mario # Definimos el grupo propietario del directorio
+      become: yes
+    - name: Compartir el directorio con samba
+      lineinfile: # Para modificar un archivo
+        path: /etc/samba/smb.conf # Ruta del archivo a modificar
+        line: "{{ item }}" # Indica cada línea del bucle loop que se agregará
+        insertafter: EOF # Indica la posición donde se agregarán las líneas (End Of File)
+      loop: # Para definir un bucle o lista
+        - "[samba_compartida]" # Nombre del recurso compartido
+        - " path = /home/mario/samba_compartida" # Ruta del recurso compartido
+        - " writable = yes" # Otorga permisos de escritura
+        - " guest ok = yes" # Permite el acceso de usuarios no autenticados
+      become: yes
+    - name: Reiniciar samba
+      service:
+        name: smbd # Nombre del servicio de samba
+        state: restarted # Estado del servicio (reiniciado)
+      become: yes
