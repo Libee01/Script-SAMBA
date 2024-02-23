@@ -1,0 +1,16 @@
+---
+- name: Instalar samba
+  hosts: all
+  tasks:
+   - name: Descargar samba
+     apt:
+       name: samba
+       update_cache: yes # Para actualizar las librerías antes de descargar samba (ejecutar apt-get update)
+       state: latest # Para instalar la última versión
+     become: yes # Para otorgar permisos de superusuario
+
+   - name: Reiniciar samba
+     service:
+       name: smbd # Nombre del servicio de samba
+       state: restarted # Estado del servicio (reiniciado)
+     become: yes
