@@ -1,0 +1,47 @@
+Empezamos instalando Docker Compose: sudo apt install docker-compose
+
+Creamos una carpeta donde almacenaremos todo: mkdir docker && sudo chmod 777 -R docker
+
+Creamos el archivo de imagen del docker:
+
+FROM ubuntu:latest
+
+# Instalar Samba
+RUN apt-get update && \
+    apt-get install -y samba
+
+# Crea una carpeta compartida
+RUN mkdir /compar
+
+# Aqui ponemos la configuracion que nosotros queramos para samba, en este caso la dejo por defecto
+RUN cp /etc/samba/smb.conf /etc/samba/smb.conf.default
+  
+# Abre los puertos de Samba
+EXPOSE 137/udp 138/udp 139 445
+
+# Inicia Samba al arrancar el contenedor
+CMD smbd -F -S
+
+Una vez creado, ponemos este comando para montar la imagen, podemos poner cualquier nombre: sudo docker build -t imagen .
+
+Ahora creamos un archivo yml llamado: docker-compose.yml
+  
+version: "3"
+services:
+  samba:
+    image: imagen # Ponemos el nombre de antes
+    container_name: samba-container
+    volumes:
+      - /$HOME/compar:/compar # Aqui ponemos el nombre de la carpeta compartida
+    ports:
+      - "137:137"
+      - "138:138"
+      - "139:139"
+      - "445:445"
+    restart: always
+
+Ahora ponemos el comando para crear el docker: sudo docker-compose up -d
+
+Para ver si se ha creado correctamente ponemos: udo docker ps
+
+
