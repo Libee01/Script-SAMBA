@@ -1,0 +1,33 @@
+# Creamos un archivo de imagen
+FROM ubuntu:latest
+
+RUN apt-get update && \
+    apt-get install -y samba
+
+COPY smb.conf /etc/samba/smb.conf
+
+CMD smbd --foreground --no-process-group
+
+# Creamos un archivo de configuracion
+
+[global]
+workgroup = WORKGROUP
+server string = Samba Server %v
+security = user
+map to guest = bad user
+guest account = nobody
+
+[shared]
+path = /shared
+browsable = yes
+writable = yes
+guest ok = yes
+
+#Ponemos este comando
+
+docker build -t nombre_de_la_imagen .
+docker run -p 139:139 -p 445:445 -v ~/shared:/shared --name sambacon -d sambaiso
+
+# Saber la IP de samba
+
+  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sambacon
