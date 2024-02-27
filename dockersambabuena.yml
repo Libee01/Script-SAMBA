@@ -1,0 +1,44 @@
+# Creamos un archivo de imagen (lo llamamos sambaiso)
+
+FROM ubuntu:latest
+
+RUN apt-get update && \
+    apt-get install -y samba
+
+COPY smb.conf /etc/samba/smb.conf
+
+CMD smbd --foreground --no-process-group
+
+# Creamos un archivo de configuracion (lo llamamos smb.conf)
+
+[global]
+workgroup = WORKGROUP
+server string = Samba Server %v
+security = user
+map to guest = bad user
+guest account = nobody
+
+[shared]
+path = /shared
+browsable = yes
+writable = yes
+guest ok = yes
+
+# Ponemos este comando para montar la imagen
+
+docker build -t sambaiso .
+
+#Ponemos este comando para crear el docker
+
+docker run -p 139:139 -p 445:445 -v ~/shared:/shared --name sambacon -d sambaiso
+
+# Saber la IP de samba (OPCIONAL)
+
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' sambacon
+
+# Comandos para borrar todo en caso de fallo
+
+sudo docker stop samba-container
+sudo docker rm samba-container
+sudo docker-compose down
+sudo docker network rm samba_default
