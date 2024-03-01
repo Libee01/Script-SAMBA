@@ -116,6 +116,7 @@ if [ $# -eq 0 ]; then
 		        ;;
 		esac
 	done
+done
 else
 	echo "con parametros"
 fi

@@ -1,0 +1,2 @@
+./configsmbd.sh: línea 122: aviso: el documento-aquí en la línea 54 está delimitado por fin-de-archivo (se esperaba «EOL»)
+./configsmbd.sh: línea 123: error sintáctico: no se esperaba el final del archivo
