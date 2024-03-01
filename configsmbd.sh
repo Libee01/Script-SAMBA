@@ -32,6 +32,9 @@ if [ $# -eq 0 ]; then
 						echo "Configuración Interactiva de smb.conf"
 						echo "------------------------------------"
 						
+						# Crear el directorio /etc/samba si no existe
+						sudo mkdir -p /etc/samba
+						
 						# Solicitar el nombre del usuario
 						read -p "Nombre del usuario: " usuario
 						# Solicitar la contraseña del usuario
@@ -77,7 +80,7 @@ EOL
 								a)
 									ssh $user@$ip
 									sudo apt update
-									sudo apt install samba
+									sudo apt install samba -y
 									sudo systemctl status smbd
 								;;
 								b)
