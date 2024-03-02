@@ -1,16 +1,21 @@
 #!/bin/bash
 
 if [ $# -eq 0 ]; then
+	while true
+	do
 	echo "a. Mostrar datos de tu equipo"
 	echo "b. Mostrar el estado del servicio"
 	echo "c. Mostrar un menú para ejecutar acciones"
+	echo "d. Salir"
 	read -p "Elige una opción: " opcion
 	case $opcion in
 		a)
 			ip=$(ip addr show | grep -E "inet" |grep -E "\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\/(?:3[0-2]|[12]?[0-9])\b brd" | cut -d" " -f6)
+			echo $ip
 		;;
 		b)
-			estado=$(systemctl status cron.service | grep -E "Active: " | cut -d" " -f7)
+			estado=$(systemctl status smbd | grep -E "Active: " | cut -d" " -f6-)
+			echo $estado
 		;;
 		c)
 			echo "Tu dirección IP es: $ip"
@@ -31,10 +36,10 @@ if [ $# -eq 0 ]; then
 						printf "\n"
 						echo "Configuración Interactiva de smb.conf"
 						echo "------------------------------------"
-						
+
 						# Crear el directorio /etc/samba si no existe
 						sudo mkdir -p /etc/samba
-						
+
 						# Solicitar el nombre del usuario
 						read -p "Nombre del usuario: " usuario
 						# Solicitar la contraseña del usuario
@@ -52,7 +57,7 @@ if [ $# -eq 0 ]; then
 						# Solicitar la ruta del directorio compartido
 						read -p "Ruta del Directorio Compartido: " share_path
 						# Solicitar la lista de usuarios válidos
-						read -p "Usuarios Válidos (separados por comas): " valid_users					
+						read -p "Usuarios Válidos (separados por comas): " valid_users
 						# Crear el archivo smb.conf
 						cat <<EOL | sudo tee /etc/samba/smb.conf
 [global]
@@ -118,10 +123,14 @@ EOL
 				esac
 			done
 		;;
+		d)
+			exit 0
+		;;
 		*)
 			echo "Opción no válida"
 		;;
 	esac
+	done
 else
 	echo "con parametros"
 fi
