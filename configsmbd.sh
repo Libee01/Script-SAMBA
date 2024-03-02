@@ -1,5 +1,24 @@
 #!/bin/bash
 
+mostrar_datos_red() {
+	echo "Datos de red del equipo:"
+	ip addr show | grep -E "inet" |grep -E "\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\/(?:3[0-2]|[12]?[0-9])\b brd" | cut -d" " -f6
+
+}
+estado_servicio(){
+	echo "El estado del servicio actualmente es: "
+	systemctl status smbd | grep -E "Active: " | cut -d" " -f7-
+
+}
+# Función para instalar el servicio Samba en un equipo remoto
+instalacion_remoto() {
+    read -p "Ingrese el nombre de usuario del equipo remoto: " user
+    read -p "Ingrese la dirección IP del equipo remoto: " ip
+    read -p "Contraseña sudo: " sudo
+
+    echo "Instalando el servicio Samba en el equipo remoto..."
+    ssh $user@$ip "echo $sudo | sudo -S apt update && echo $sudo | sudo -S apt install -y samba && echo $sudo | sudo -S systemctl status smbd" < /dev/null
+}
 if [ $# -eq 0 ]; then
 	while true
 	do
@@ -10,16 +29,21 @@ if [ $# -eq 0 ]; then
 	read -p "Elige una opción: " opcion
 	case $opcion in
 		a)
-			ip=$(ip addr show | grep -E "inet" |grep -E "\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\/(?:3[0-2]|[12]?[0-9])\b brd" | cut -d" " -f6)
-			echo $ip
+			printf "\n"
+			mostrar_datos_red
+			printf "\n"
 		;;
 		b)
-			estado=$(systemctl status smbd | grep -E "Active: " | cut -d" " -f6-)
-			echo $estado
+			printf "\n"
+			estado_servicio
+			printf "\n"
 		;;
 		c)
-			echo "Tu dirección IP es: $ip"
-			echo "El estado del servicio en este momento es: $estado"
+			printf "\n"
+			mostrar_datos_red
+			printf "\n"
+			estado_servicio
+
 			printf "\n"
 			while true
 			do
@@ -27,10 +51,9 @@ if [ $# -eq 0 ]; then
 				echo "2. Eliminar el servicio"
 				echo "3. Activar el servicio"
 				echo "4. Parar el servicio"
-				echo "5. Configuración"
-				echo "6. Salir"
+				echo "5. Salir"
 				printf "\n"
-				read -p "Elige una opción" opcion
+				read -p "Elige una opción: " opcion
 				case $opcion in
 					1)
 						printf "\n"
@@ -80,13 +103,11 @@ EOL
 							echo "a. Instalar con comandos"
 							echo "b. Instalar con Ansible"
 							echo "c. Instalar con Docker"
+							echo "d. Cancelar"
 							read -p "Instalar el servicio con: "  instalar
 							case $instalar in
 								a)
-									ssh $user@$ip
-									sudo apt update
-									sudo apt install samba -y
-									sudo systemctl status smbd
+									instalacion_remoto
 								;;
 								b)
 									echo "$ip ansible_ssh_user=$usuario ansible_ssh_pass=$contra" >> ./host
@@ -95,7 +116,7 @@ EOL
 								c)
 									echo "opcion c"
 								;;
-								*)
+								d)
 									exit 0
 								;;
 							esac
@@ -104,17 +125,20 @@ EOL
 					;;
 					2)
 						printf "\n"
-						echo "2"
+						sudo apt-get -y remove samba
+						echo "El servicio Samba ha sido removido"
 						printf "\n"
 					;;
 					3)
 						printf "\n"
-						echo "3"
+						sudo systemctl start smbd.service
+						echo "El servicio Samba esta: $servicio"
 						printf "\n"
 					;;
 					4)
 						printf "\n"
-						echo "4"
+						sudo systemctl stop smbd.service
+						echo "El servicio Samba esta: $servicio"
 						printf "\n"
 					;;
 					5)
