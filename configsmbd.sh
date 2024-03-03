@@ -47,11 +47,13 @@ if [ $# -eq 0 ]; then
 			printf "\n"
 			while true
 			do
+				echo "-----------------------------------------"
 				echo "1. Instalación del servicio"
 				echo "2. Eliminar el servicio"
 				echo "3. Activar el servicio"
 				echo "4. Parar el servicio"
 				echo "5. Salir"
+				echo "-----------------------------------------"
 				printf "\n"
 				read -p "Elige una opción: " opcion
 				case $opcion in
@@ -100,10 +102,12 @@ EOL
 						sudo systemctl restart smbd
 						while true
 						do
+							echo "-----------------------------------------"
 							echo "a. Instalar con comandos"
 							echo "b. Instalar con Ansible"
 							echo "c. Instalar con Docker"
 							echo "d. Cancelar"
+							echo "-----------------------------------------"
 							read -p "Instalar el servicio con: "  instalar
 							case $instalar in
 								a)
@@ -115,6 +119,21 @@ EOL
 								;;
 								c)
 									echo "opcion c"
+									mkdir ./sambadocker
+									cd sambadocker
+									# Crear el archivo Dockerfile
+									cat <<EOL | sudo tee Dockerfile
+FROM ubuntu:latest
+
+RUN apt-get update && \
+    apt-get install -y samba
+
+CMD smbd --foreground --no-process-group
+EOL
+
+								docker build -t sambaiso .
+								docker run -p 139:139 -p 445:445 -v $share_path:/$share_name --name sambacon -d sambaiso
+
 								;;
 								d)
 									exit 0
