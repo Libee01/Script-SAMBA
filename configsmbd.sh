@@ -17,7 +17,7 @@ instalacion_remoto() {
     read -p "Contraseña sudo: " sudo
 
     echo "Instalando el servicio Samba en el equipo remoto..."
-    ssh $user@$ip "echo $sudo | sudo -S apt update && echo $sudo | sudo -S apt install -y samba && echo $sudo | sudo -S systemctl status smbd" < /dev/null
+    ssh "$user@$ip" "echo $sudo | sudo -S apt update && echo $sudo | sudo -S apt install -y samba && echo $sudo | sudo -S systemctl status smbd" < /dev/null
 }
 if [ $# -eq 0 ]; then
 	while true
@@ -66,7 +66,7 @@ if [ $# -eq 0 ]; then
 						# Solicitar el nombre del usuario
 						read -p "Nombre del usuario: " usuario
 						# Solicitar la contraseña del usuario
-						read -p "Contraseña: " contra
+						read -p "Contraseña: " pass
 						# Solicitar la dirección IP
 						read -p "Dirección IP: " ip
 						# Solicitar el nombre del grupo de trabajo
@@ -110,7 +110,7 @@ EOL
 									instalacion_remoto
 								;;
 								b)
-									echo "$ip ansible_ssh_user=$usuario ansible_ssh_pass=$contra" >> ./host
+									echo "$ip ansible_ssh_user=$usuario ansible_ssh_pass=$pass" >> ./host
 									ansible-playbook -v samba.yml --extra-vars "ansible_sudo_pass=$pass"
 								;;
 								c)
@@ -132,13 +132,13 @@ EOL
 					3)
 						printf "\n"
 						sudo systemctl start smbd.service
-						echo "El servicio Samba esta: $servicio"
+						echo "El servicio Samba ha sido activado"
 						printf "\n"
 					;;
 					4)
 						printf "\n"
 						sudo systemctl stop smbd.service
-						echo "El servicio Samba esta: $servicio"
+						echo "El servicio Samba ha sido parado"
 						printf "\n"
 					;;
 					5)
