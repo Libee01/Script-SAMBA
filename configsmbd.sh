@@ -19,6 +19,30 @@ instalacion_remoto() {
     echo "Instalando el servicio Samba en el equipo remoto..."
     ssh "$user@$ip" "echo $sudo | sudo -S apt update && echo $sudo | sudo -S apt install -y samba && echo $sudo | sudo -S systemctl status smbd" < /dev/null
 }
+eliminar_servicio{
+    read -p "Ingrese el nombre de usuario del equipo remoto: " user
+    read -p "Ingrese la dirección IP del equipo remoto: " ip
+    read -p "Contraseña sudo: " sudo
+
+    echo "Eliminando el servicio Samba en el equipo remoto..."
+    ssh "$user@$ip" "echo $sudo | sudo -S sudo apt-get -y remove samba" < /dev/null
+}
+parar_servicio{
+    read -p "Ingrese el nombre de usuario del equipo remoto: " user
+    read -p "Ingrese la dirección IP del equipo remoto: " ip
+    read -p "Contraseña sudo: " sudo
+
+    echo "Parando el servicio Samba en el equipo remoto..."
+    ssh "$user@$ip" "echo $sudo | sudo -S systemctl stop smbd.service" < /dev/null
+}
+iniciar_servicio{
+    read -p "Ingrese el nombre de usuario del equipo remoto: " user
+    read -p "Ingrese la dirección IP del equipo remoto: " ip
+    read -p "Contraseña sudo: " sudo
+
+    echo "Parando el servicio Samba en el equipo remoto..."
+    ssh "$user@$ip" "echo $sudo | sudo -S systemctl start smbd.service" < /dev/null
+}
 if [ $# -eq 0 ]; then
 	while true
 	do
@@ -144,20 +168,17 @@ EOL
 					;;
 					2)
 						printf "\n"
-						sudo apt-get -y remove samba
-						echo "El servicio Samba ha sido removido"
+						eliminar_servicio
 						printf "\n"
 					;;
 					3)
 						printf "\n"
-						sudo systemctl start smbd.service
-						echo "El servicio Samba ha sido activado"
+						iniciar_servicio
 						printf "\n"
 					;;
 					4)
 						printf "\n"
-						sudo systemctl stop smbd.service
-						echo "El servicio Samba ha sido parado"
+						parar_servicio
 						printf "\n"
 					;;
 					5)
