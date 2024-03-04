@@ -19,7 +19,7 @@ instalacion_remoto() {
     echo "Instalando el servicio Samba en el equipo remoto..."
     ssh "$user@$ip" "echo $sudo | sudo -S apt update && echo $sudo | sudo -S apt install -y samba && echo $sudo | sudo -S systemctl status smbd" < /dev/null
 }
-eliminar_servicio{
+eliminar_servicio() {
     read -p "Ingrese el nombre de usuario del equipo remoto: " user
     read -p "Ingrese la dirección IP del equipo remoto: " ip
     read -p "Contraseña sudo: " sudo
@@ -27,7 +27,7 @@ eliminar_servicio{
     echo "Eliminando el servicio Samba en el equipo remoto..."
     ssh "$user@$ip" "echo $sudo | sudo -S sudo apt-get -y remove samba" < /dev/null
 }
-parar_servicio{
+parar_servicio() {
     read -p "Ingrese el nombre de usuario del equipo remoto: " user
     read -p "Ingrese la dirección IP del equipo remoto: " ip
     read -p "Contraseña sudo: " sudo
@@ -35,7 +35,7 @@ parar_servicio{
     echo "Parando el servicio Samba en el equipo remoto..."
     ssh "$user@$ip" "echo $sudo | sudo -S systemctl stop smbd.service" < /dev/null
 }
-iniciar_servicio{
+iniciar_servicio() {
     read -p "Ingrese el nombre de usuario del equipo remoto: " user
     read -p "Ingrese la dirección IP del equipo remoto: " ip
     read -p "Contraseña sudo: " sudo
