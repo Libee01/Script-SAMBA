@@ -120,8 +120,9 @@ if [ $# -eq 0 ]; then
    writable = yes
    valid users = $valid_users
 EOL
-
 						echo "Configuración completada. Se ha creado /etc/samba/smb.conf con la configuración proporcionada."
+						mkdir "$share_path"
+						sudo smbpasswd -a "$usuario"
 						# Reiniciar el servicio Samba
 						sudo systemctl restart smbd
 						while true
