@@ -8,7 +8,7 @@
   El proyecto contiene múltiples archivos aparte del script principal, ya que nos permite instalar el servicio samba de distintas formas.
 </div>
 
-<br><br>
+<br>
 
 ## 📍 CONTENIDO
 <div align="justify">
