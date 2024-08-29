@@ -4,7 +4,7 @@
 ## 📍 INTRODUCCIÓN
 <div align="justify">
   Este proyecto contiene un script que permite la instalación mediante diversas formas del servicio samba en linux en equipos remotos.
-  <br>
+  <br><br>
   El proyecto contiene múltiples archivos aparte del script principal, ya que nos permite instalar el servicio samba de distintas formas.
 </div>
 
@@ -25,4 +25,5 @@
   🔸 <b>Samba.yml</b>: Este archivo es el que contiene las instrucciones para la instalación del servicio en cuestión mediante ansible,
   en este caso del servicio samba. Es importante tener en cuenta las tabulaciones a la hora de usar archivos YAML.
   <br><br>
+  🔸 <b></b>
 </div>
