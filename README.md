@@ -25,5 +25,13 @@
   🔸 <b>Samba.yml</b>: Este archivo es el que contiene las instrucciones para la instalación del servicio en cuestión mediante ansible,
   en este caso del servicio samba. Es importante tener en cuenta las tabulaciones a la hora de usar archivos YAML.
   <br><br>
-  🔸 <b></b>
+  🔸 <b>Dockersambabuena.yml</b>: Este archivo contiene las instrucciones para una instalación básica y rápida de Samba en Docker, si no
+  requieres de docker-compose esta instalación es suficiente.
+  <br><br>
+  🔸 <b>Dockersamba.yml</b>: Este archivo contiene al igual que el anterior las instrucciones para instalar Samba en Docker, pero de forma
+  más completa, incluye la configuración de Docker Compose para facilitar la gestión de contenedores e instrucciones para conectarse
+  desde un cliente Samba.
+  <br><br>
+  🔸 <b>Configsmbd</b>: Este archivo es el script principal que contiene los comandos para instalar de la forma que queramos, ya sea por
+  comandos, ansible o docker.
 </div>
